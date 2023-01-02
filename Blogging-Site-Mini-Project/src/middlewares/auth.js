@@ -1,12 +1,12 @@
-const blogModel = require('../model/blogModel');
+const blogModel = require('../Models/BlogsModel');
 const jwt = require('jsonwebtoken');
 const ObjectId = require("mongoose").Types.ObjectId
 
 //=============================================== Authentication <=============================================//
 
-exports.authentication = async function (req, res, next) {
+const tokenAuthentication = async function (req, res, next) {
     try {
-        let token = req.headers["x-api-key"]
+        let token = req.headers["X-api-key"]
         if (!token) token = req.headers["X-Api-Key"]
         if (!token) return res.status(400).send({ status: false, msg: "Token is required" })
         try {
@@ -21,7 +21,7 @@ exports.authentication = async function (req, res, next) {
 }
 
 // =============================================== Authorization =======================================================//
-exports.authorize = async function (req, res, next) {
+const tokenAuthorization= async function (req, res, next) {
     try {
         let blogId = req.params.blogId || req.query.authorId.category.tags.subcategory
         console.log(blogId)
@@ -40,6 +40,5 @@ exports.authorize = async function (req, res, next) {
         return res.status(500).send({ status: false, msg: "Error", error: err.message })
     }
 }
-
-module.exports.authentication=authentication;
-module.exports.authorize=authorize;
+module.exports.tokenAuthentication = tokenAuthentication;
+module.exports.tokenAuthorization = tokenAuthorization;

@@ -4,7 +4,7 @@ const express = require('express')
 const router = express.Router()
 const blogController = require('../Controllers/blogController')
 const authorController = require('../Controllers/authorController')
-const MW = require('../middlewares/auth.js')
+const MW = require("../middlewares/auth")
 
 //__________________________ get api : for Test ___________________________________________
 
@@ -22,23 +22,23 @@ router.post("/login", authorController.logInUser)
 
 // //__________________________ post api : Create Blog ___________________________________________
 
-router.post("/blogs", blogController.createBlog)
+router.post("/blogs",blogController.createBlog)
 
 // //__________________________ get api : Get Blog ___________________________________________
 
-router.get("/blogs", blogController.getBlogs)
+router.get("/blogs",MW.tokenAuthentication,blogController.getBlogs)
 
 // //__________________________ put api : Update  ___________________________________________
 
-router.put("/blogs/:blogId", blogController.putBlog)
+router.put("/blogs/:blogId",MW.tokenAuthentication,MW.tokenAuthorization, blogController.putBlog)
 
 // //__________________________ delete api : delete  ___________________________________________
 
-router.delete("/blogs/:blogId", blogController.deleteBlog)
+router.delete("/blogs/:blogId",MW.tokenAuthentication,MW.tokenAuthorization, blogController.deleteBlog)
 
 // //__________________________ Delete api : Delete by Query ___________________________________________
 
-router.delete("/blogs", blogController.blogByQuery)
+router.delete("/blogs", MW.tokenAuthentication,blogController.blogByQuery)
 
 // //__________________________ Export : Router ___________________________________________
 
