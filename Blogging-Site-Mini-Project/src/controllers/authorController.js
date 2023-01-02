@@ -96,7 +96,7 @@ const logInUser = async function (req, res) {
         }
         const token = jwt.sign(
             { authorId: author._id.toString() },
-            "this-is-my-Group7"
+            "functionUp-project-blogging-site"
         );
         return res.status(200).send({ status: true, data: { token } });
     } catch (err) {

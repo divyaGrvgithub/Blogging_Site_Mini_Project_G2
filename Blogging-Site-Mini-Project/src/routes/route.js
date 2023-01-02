@@ -4,7 +4,7 @@ const express = require('express')
 const router = express.Router()
 const blogController = require('../Controllers/blogController')
 const authorController = require('../Controllers/authorController')
-const MW = require('../middlewares/commonMiddleware')
+const MW = require('../middlewares/auth.js')
 
 //__________________________ get api : for Test ___________________________________________
 
