@@ -26,19 +26,19 @@ router.post("/blogs", blogController.createBlog)
 
 // //__________________________ get api : Get Blog ___________________________________________
 
-router.get("/blogs",MW.isValidName, MW.isValidEmail, MW.isValidPassword, MW.isValidvalue, MW.isValidObjectId, blogController.getBlogs)
+router.get("/blogs", blogController.getBlogs)
 
 // //__________________________ put api : Update  ___________________________________________
 
-router.put("/blogs/:blogId", MW.isValidName, MW.isValidEmail, MW.isValidPassword, MW.isValidvalue, MW.isValidObjectId, blogController.putBlog)
+router.put("/blogs/:blogId", blogController.putBlog)
 
 // //__________________________ delete api : delete  ___________________________________________
 
-router.delete("/blogs/:blogId", MW.isValidName, MW.isValidEmail, MW.isValidPassword, MW.isValidvalue, MW.isValidObjectId, blogController.deleteBlog)
+router.delete("/blogs/:blogId", blogController.deleteBlog)
 
 // //__________________________ Delete api : Delete by Query ___________________________________________
 
-router.delete("/blogs", MW.isValidName, MW.isValidEmail, MW.isValidPassword, MW.isValidvalue, MW.isValidObjectId, blogController.blogByQuery)
+router.delete("/blogs", blogController.blogByQuery)
 
 // //__________________________ Export : Router ___________________________________________
 
