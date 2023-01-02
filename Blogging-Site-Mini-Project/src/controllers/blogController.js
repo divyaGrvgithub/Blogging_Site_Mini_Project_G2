@@ -65,6 +65,7 @@ const getBlogs = async function (req, res) {
 
         const { category, subcategory, tags, authorId } = data;
         if (authorId) {
+            console.log(authorId)
             let verifyAuthorId = await blogModel.find({ authorId: authorId });
             if (verifyAuthorId.length == 0) {
                 return res

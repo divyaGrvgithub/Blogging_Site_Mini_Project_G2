@@ -40,14 +40,14 @@ const createAuthor = async function (req, res) {
             }
         }
 
-        if (!validator.isValidEmail(email)) {
+        if (validator.isValidEmail(email)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "Please Enter Valid Email Address" });
         }
         const isEmailAlreadyUsed = await authorModel.findOne({ email });
         if (isEmailAlreadyUsed) {
-            return res.status(400).send({
+            return res.status(200).send({
                 status: false,
                 msg: "Oooh...Email already Registered. Please Login...",
             });
@@ -78,7 +78,7 @@ const logInUser = async function (req, res) {
         const email = req.body.email;
         const password = req.body.password;
 
-        if (!validator.isValidEmail(email)) {
+        if (validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, msg: "Email is required" });
         }
 
