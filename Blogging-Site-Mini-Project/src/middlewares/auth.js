@@ -21,7 +21,7 @@ const tokenAuthentication = async function (req, res, next) {
 }
 
 // =============================================== Authorization =======================================================//
-const tokenAuthorization= async function (req, res, next) {
+const tokenAuthorization = async function (req, res, next) {
     try {
         let blogId = req.params.blogId || req.query.authorId.category.tags.subcategory
         console.log(blogId)

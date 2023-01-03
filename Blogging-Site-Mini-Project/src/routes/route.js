@@ -22,23 +22,23 @@ router.post("/login", authorController.logInUser)
 
 // //__________________________ post api : Create Blog ___________________________________________
 
-router.post("/blogs",MW.tokenAuthentication,blogController.createBlog)
+router.post("/blogs", MW.tokenAuthentication, blogController.createBlog)
 
 // //__________________________ get api : Get Blog ___________________________________________
 
-router.get("/blogs",MW.tokenAuthentication,blogController.getBlogs)
+router.get("/blogs", MW.tokenAuthentication, blogController.getBlogs)
 
 // //__________________________ put api : Update  ___________________________________________
 
-router.put("/blogs/:blogId",MW.tokenAuthentication,MW.tokenAuthorization, blogController.putBlog)
+router.put("/blogs/:blogId", MW.tokenAuthentication, MW.tokenAuthorization, blogController.putBlog)
 
 // //__________________________ delete api : delete  ___________________________________________
 
-router.delete("/blogs/:blogId",MW.tokenAuthentication,MW.tokenAuthorization, blogController.deleteBlog)
+router.delete("/blogs/:blogId", MW.tokenAuthentication, MW.tokenAuthorization, blogController.deleteBlog)
 
 // //__________________________ Delete api : Delete by Query ___________________________________________
 
-router.delete("/blogs",MW.tokenAuthentication,blogController.blogByQuery)
+router.delete("/blogs", MW.tokenAuthentication, blogController.blogByQuery)
 
 // //__________________________ Export : Router ___________________________________________
 
