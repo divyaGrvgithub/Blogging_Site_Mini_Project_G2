@@ -71,7 +71,7 @@ const createAuthor = async function (req, res) {
     }
 };
 
-//______________________ post api : Login Author ________________________________
+// ______________________ post api : Login Author ________________________________
 
 const logInUser = async function (req, res) {
     try {
@@ -94,17 +94,23 @@ const logInUser = async function (req, res) {
                 .status(401)
                 .send({ status: false, msg: "Invalid login credentials" });
         }
-        const token = jwt.sign(
-            { authorId: author._id.toString() },
-            "functionUp-project-blogging-site"
-        );
-        return res.status(200).send({ status: true, data: { token } });
-    } catch (err) {
-        return res.status(500).send({ status: false, err: err.message });
+
+        let token;
+        try {
+            token = jwt.sign({                   //jwt.sign to creating the token 
+                authorId: author._id.toString(),
+                developer: "Californium Group1"     //   payload
+            }, "functionUp-project-blogging-site");         // signature key
+        } catch (err) {
+            return res.status(400).send({ status: false, msg: "Error", error: err.message })
+        }
+        //====================================================setHeader with some information ======================================================//
+        res.setHeader("x-api-key", token);
+        return res.status(201).send({ status: true, msg: "User login sucessful", token })
     }
-};
-
-//__________________________ Exporting Module ___________________________________________
-
+    catch (err) {
+        return res.status(500).send({ status: false, msg: "Error", error: err.message })
+    }
+}
 module.exports.createAuthor = createAuthor;
 module.exports.logInUser = logInUser;

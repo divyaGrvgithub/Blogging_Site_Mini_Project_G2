@@ -6,8 +6,8 @@ const ObjectId = require("mongoose").Types.ObjectId
 
 const tokenAuthentication = async function (req, res, next) {
     try {
-        let token = req.headers["X-api-key"]
-        if (!token) token = req.headers["X-Api-Key"]
+        let token = req.headers["x-api-key"]
+        if (!token) token = req.headers["x-api-Key"]
         if (!token) return res.status(400).send({ status: false, msg: "Token is required" })
         try {
             decodeToken = jwt.verify(token, "functionUp-project-blogging-site")
