@@ -1,25 +1,25 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const route = require('./routes/route.js');
 const { default: mongoose } = require('mongoose');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true)
-mongoose.connect("mongodb+srv://divyamala_:Dt25042000knp@divyamala.0cofsch.mongodb.net/divyaGrv", {
-    useNewUrlParser: true
+mongoose.connect("mongodb+srv://karthikramadugu:Karthiksai1@karthikcluster.b2ikjot.mongodb.net/test", {
+    // useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
     .catch(err => console.log(err))
 
-app.use(
-    function (req, res, next) {
-        console.log("inside GLOBAL MW");
-        next();
-    }
-);
+// app.use(
+//     function (req, res, next) {
+//         console.log("inside GLOBAL MW");
+//         next();
+//     }
+// );
 
 app.use('/', route);
 

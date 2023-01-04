@@ -1,12 +1,14 @@
-//______________________ Import or Require Modules ________________________________
+//______________________ Import or Require Modules ________________________________//
 
 const authorModel = require("../Models/AuthorModel");
-const validator = require("../middlewares/commonMiddleware");
+const validator = require("../Validation/validator");
 const jwt = require("jsonwebtoken");
 
 //______________________ post api : Create Author ________________________________
+//<-------------This API used for Create Authors---------------->//
 
-const createAuthor = async function (req, res) {
+
+const createAuthor = async (req, res) => {
     try {
         const data = req.body;
 
@@ -33,7 +35,7 @@ const createAuthor = async function (req, res) {
         if (!title) {
             return res.status(400).send({ status: false, msg: "title is required" });
         } else {
-            if (title != "Mr" && title != "Mrs" && title != "Miss") {
+            if (title.trim() != "Mr" && title.trim() != "Mrs" && title.trim() != "Miss") {
                 return res
                     .status(400)
                     .send({ status: false, msg: "title can be Mr. Miss or Mrs " });
@@ -71,9 +73,11 @@ const createAuthor = async function (req, res) {
     }
 };
 
-// ______________________ post api : Login Author ________________________________
+// ______________________ post api : Login Author ________________________________//
+//<--------------This API used for Log in Author------------------>// 
 
-const logInUser = async function (req, res) {
+
+const logInUser = async (req, res) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
@@ -99,8 +103,10 @@ const logInUser = async function (req, res) {
         try {
             token = jwt.sign({                   //jwt.sign to creating the token 
                 authorId: author._id.toString(),
-                developer: "Californium Group1"     //   payload
-            }, "functionUp-project-blogging-site");         // signature key
+                Batch: "Californium Group1",     //   payload
+                Project: "Blogging site mini project"
+
+            }, "functionUp-project-blogging-site");    // signature key
         } catch (err) {
             return res.status(400).send({ status: false, msg: "Error", error: err.message })
         }

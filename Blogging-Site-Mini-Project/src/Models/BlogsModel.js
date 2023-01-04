@@ -41,4 +41,4 @@ const blogSchema = new mongoose.Schema({
 
 //__________________________ Exporting Blog Schema ___________________________________________
 
-module.exports = new mongoose.model("Blog", blogSchema)
+module.exports = new mongoose.model("Project1Blog", blogSchema)

@@ -1,12 +1,13 @@
-//______________________ Import or Require Modules ________________________________
+//______________________ Import or Require Modules ________________________________//
 
 const blogModel = require("../Models/BlogsModel");
 const authorModel = require("../Models/AuthorModel");
-const validator = require("../Middlewares/commonMiddleware");
+const validator = require("../Validation/validator");
 
-//______________________ post api : Create Blog ________________________________
+//______________________ post api : Create Blog ________________________________//
+//<--------------------This API used for Create Blogs-------------->//
 
-const createBlog = async function (req, res) {
+const createBlog = async (req, res) => {
     try {
         const data = req.body;
 
@@ -52,9 +53,10 @@ const createBlog = async function (req, res) {
     }
 };
 
-//______________________ get api : get Blog ________________________________
+//______________________ get api : get Blog ________________________________//
+//<----------------This API used for Fetch Blogs of Logged in Author----------->//
 
-const getBlogs = async function (req, res) {
+const getBlogs = async (req, res) => {
     try {
         let data = req.query;
         let filter = {
@@ -67,7 +69,7 @@ const getBlogs = async function (req, res) {
         if (authorId) {
             console.log(authorId)
             let verifyAuthorId = await blogModel.find({ authorId: authorId });
-            if (verifyAuthorId.length == 0) {
+            if (!verifyAuthorId) {
                 return res
                     .status(400)
                     .send({ status: false, msg: "No blogs in this AuthorId exist" });
@@ -114,9 +116,10 @@ const getBlogs = async function (req, res) {
     }
 };
 
-//______________________ PUT api : Update Blog ________________________________
+//______________________ PUT api : Update Blog ________________________________//
+//<----------------This API used for Update Blogs of Logged in Author---------->//
 
-const putBlog = async function (req, res) {
+const putBlog = async (req, res) => {
     try {
         let data = req.body;
         let authorId = req.query.authorId;
@@ -141,7 +144,7 @@ const putBlog = async function (req, res) {
 
         const deleteBlog = await blogModel.findById(id);
 
-        if (deleteBlog.isdeleted == true) {
+        if (!deleteBlog.isdeleted == true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "Blog already Deleted" });
@@ -177,8 +180,9 @@ const putBlog = async function (req, res) {
 };
 
 //______________________ Delete api : Delete Blog ________________________________
+//<----------------These APIs used for Deleting Blogs--------->//
 
-const deleteBlog = async function (req, res) {
+const deleteBlog = async (req, res) => {
     try {
         let blog = req.params.blogId;
         let authorId = req.query.authorId;
@@ -205,7 +209,7 @@ const deleteBlog = async function (req, res) {
             });
         }
 
-        if (blogFound.isdeleted === true) {
+        if (!blogFound.isdeleted === true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "this blog has been deleted by You" });
@@ -228,75 +232,32 @@ const deleteBlog = async function (req, res) {
 };
 
 //______________________ Delete api : Delete Blog by Query ________________________________
-
-const blogByQuery = async (req, res) => {
+//<----------------These APIs used for Deleting Blogs by query of Logged in Author--------->//
+const deleteByQuery = async (req, res) => {
     try {
-        const data = req.query;
 
-        if (Object.keys(data) == 0) {
-            return res
-                .status(400)
-                .send({ status: false, message: "No input provided" });
-        }
+        const queryParams = req.query;  //category, authorid, tag name, subcategory name
+        if (Object.keys(queryParams).length == 0)
+            return res.
+                status(400).send({ status: false, msg: "Please enter some data in the body" });
 
-        const { category, subcategory, tags } = data;
+        const blog = await blogModel.find({ $and: [queryParams, { isDeleted: true }, { isPublished: false }] });
 
-        if (category) {
-            let verifyCategory = await blogModel.find({ category: category });
-            if (verifyCategory.length == 0) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "No blogs in this category exist" });
-            }
-        }
+        if (Object.keys(blog).length == 0)
+            return res.
+                status(404).send({ msg: "Document is already Deleted " })
 
-        if (tags) {
-            let verifytags = await blogModel.find({ tags: tags });
-            if (verifytags.length == 0) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "no blog with this tags exist" });
-            }
-        }
+        const updatedBlog = await blogModel.updateMany(queryParams,
+            { $set: { isDeleted: true, isPublished: false, deletedAt: Date.now() } },
+            { new: true });
 
-        if (subcategory) {
-            let verifysubcategory = await blogModel.find({
-                subcategory: subcategory,
-            });
-
-            if (verifysubcategory.length == 0) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "no blog with this subcategory exist" });
-            }
-        }
-        let authorid = req.token.authorId;
-        let findBlog = await blogModel.find({
-            $and: [data, { isdeleted: false }, { authorid }],
-        });
-
-        if (!findBlog) {
-            return res
-                .status(400)
-                .send({ status: false, msg: "no blogs are present with this query" });
-        }
-
-        const deleteByQuery = await blogModel.updateMany(
-            data,
-            { isdeleted: true, deletedAt: new Date() },
-            { new: true }
-        );
-        if (deleteByQuery) {
-            res.status(200).send({
-                status: true,
-                msg: "Your blogs have been deleted",
-                data: deleteByQuery,
-            });
-        }
-    } catch (error) {
-        res.status(500).send({ status: false, message: error.message });
+        return res.
+            status(200).send({ status: true, data: updatedBlog })
     }
-};
+    catch (err) {
+        return res.status(500).send({ error: err.message })
+    }
+}
 
 //______________________ Export the Modules ________________________________
 
@@ -304,4 +265,4 @@ module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.putBlog = putBlog;
 module.exports.deleteBlog = deleteBlog;
-module.exports.blogByQuery = blogByQuery;
+module.exports.deleteByQuery = deleteByQuery;

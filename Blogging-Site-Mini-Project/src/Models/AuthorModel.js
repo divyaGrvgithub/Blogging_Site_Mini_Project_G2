@@ -33,4 +33,4 @@ const authorSchema = new mongoose.Schema({
 
 //__________________________ Exporting Author Schema ___________________________________________
 
-module.exports = new mongoose.model('Authorss', authorSchema)
+module.exports = new mongoose.model('Project1Author', authorSchema)
