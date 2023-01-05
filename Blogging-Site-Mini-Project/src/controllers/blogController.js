@@ -50,58 +50,39 @@ const createBlog = async (req, res) => {
 
 const getBlogs = async (req, res) => {
     try {
-        let data = req.query;
-        let filter = {
-            isdeleted: false,
-            isPublished: true,
-            ...data,
-        };
-        const { category, subcategory, tags, authorId } = data;
-        if (authorId) {
-            console.log(authorId)
-            let verifyAuthorId = await blogModel.find({ authorId: authorId });
-            if (!verifyAuthorId) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "No blogs in this AuthorId exist" });
+        //let query = req.query["authorId"];
+        let filter=req.query
+        filter["isdeleted"]=false
+        filter["isPublished"]=true
+        console.log(req.query)
+        let blogs=await blogModel.find({...filter}).populate("authorId")
+        if(blogs.length>0){
+          let count=0
+          let arr=[]
+          blogs.forEach((x)=>{
+            if(x["isdeleted"]==false && x["isPublished"]==true){
+              console.log(x)
+              arr.push(x)
+              count++
+              //res.send("success")
+              
             }
+          })
+          if(count==0){
+            res.send({status:false})
+          }else{
+            res.send({status:true,data:arr})
+          }
         }
-        if (category) {
-            let verifyCategory = await blogModel.find({ category: category });
-            if (verifyCategory.length == 0) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "No blogs in this category exist" });
-            }
-        }
-        if (tags) {
-            let verifyTags = await blogModel.find({ tags: tags });
-            if (verifyTags.length == 0) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "No blogs in this tags exist" });
-            }
-        }
-        if (subcategory) {
-            let verifySubcategory = await blogModel.find({ subcategory: subcategory });
-            if (!verifySubcategory) {
-                return res
-                    .status(400)
-                    .send({ status: false, msg: "No blogs in this Subcategory exist" });
-            }
-        }
-        let getSpecificBlogs = await blogModel.find(filter);
-        if (getSpecificBlogs.length == 0) {
-            return res
-                .status(400)
-                .send({ status: false, data: "No blogs can be found" });
-        } else {
-            return res.status(200).send({ status: true, data: getSpecificBlogs });
-        }
-    } catch (error) {
-        res.status(500).send({ status: false, err: error.message });
+      else{
+        res.status(400).send("authentication required")
+      }
     }
-};
+      catch(err){
+        res.send({staus:false,error:err.message})
+      }
+    
+}
 
 //______________________ PUT api : Update Blog ________________________________//
 //<----------------This API used for Update Blogs of Logged in Author---------->//
