@@ -35,7 +35,7 @@ router.get("/blogs", MW.tokenAuthentication, blogController.getBlogs)
 // //__________________________ put api : Update  ___________________________________________
 //<----------------This API used for Update Blogs of Logged in Author---------->//
 
-router.put("/blogs/:blogId", MW.tokenAuthentication, blogController.putBlog)
+router.put("/blogs/:blogId", MW.tokenAuthentication,MW.tokenAuthorization, blogController.putBlog)
 
 // //__________________________ delete api : delete  ___________________________________________
 //<----------------These APIs used for Deleting Blogs--------->//
