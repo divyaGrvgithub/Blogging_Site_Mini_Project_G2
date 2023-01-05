@@ -69,17 +69,17 @@ const getBlogs = async (req, res) => {
             }
           })
           if(count==0){
-            res.send({status:false})
+            res.status(404).send({status:false, msg: "All documents are Deleted"})
           }else{
-            res.send({status:true,data:arr})
+            res.status(404).send({status:true,data:arr})
           }
         }
       else{
-        res.status(400).send("authentication required")
+        res.status(400).send({status: false, msg :"Every field must be true"})
       }
     }
-      catch(err){
-        res.send({staus:false,error:err.message})
+    catch (error) {
+        res.status(500).send(error.message);
       }
     
 }
