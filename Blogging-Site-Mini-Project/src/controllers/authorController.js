@@ -41,7 +41,6 @@ const createAuthor = async (req, res) => {
                     .send({ status: false, msg: "title can be Mr. Miss or Mrs " });
             }
         }
-
         if (validator.isValidEmail(email)) {
             return res
                 .status(400)
@@ -54,7 +53,6 @@ const createAuthor = async (req, res) => {
                 msg: "Oooh...Email already Registered. Please Login...",
             });
         }
-
         if (!validator.isValidPassword(password)) {
             return res.status(400).send({
                 status: false,
@@ -62,7 +60,6 @@ const createAuthor = async (req, res) => {
             });
         }
         const newAuthor = await authorModel.create(data);
-
         res.status(201).send({
             status: true,
             msg: "Author Created successfully....",
@@ -85,20 +82,17 @@ const logInUser = async (req, res) => {
         if (validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, msg: "Email is required" });
         }
-
         if (!validator.isValidPassword(password)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "password is required" });
         }
-
         const author = await authorModel.findOne({ email, password });
         if (!author) {
             return res
                 .status(401)
                 .send({ status: false, msg: "Invalid login credentials" });
         }
-
         let token;
         try {
             token = jwt.sign({                   //jwt.sign to creating the token 
@@ -108,7 +102,7 @@ const logInUser = async (req, res) => {
 
             }, "functionUp-project-blogging-site");    // signature key
         } catch (err) {
-            return res.status(400).send({ status: false, msg: "Error", error: err.message })
+          return res.status(400).send({ status: false, msg: "Error", error: err.message })
         }
         //====================================================setHeader with some information ======================================================//
         res.setHeader("x-api-key", token);

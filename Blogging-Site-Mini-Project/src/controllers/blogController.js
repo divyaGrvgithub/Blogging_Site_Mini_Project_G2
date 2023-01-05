@@ -10,42 +10,34 @@ const validator = require("../Validation/validator");
 const createBlog = async (req, res) => {
     try {
         const data = req.body;
-
         if (Object.keys(data).length == 0) {
             return res
                 .status(400)
                 .send({ status: false, message: "All Keys are Mandatory" });
         }
-
         const { title, body, authorId, category } = data;
-
         if (!title) {
             return res.status(400).send({ status: false, msg: "title is required" });
         }
-
         if (!body) {
             return res.status(400).send({ status: false, msg: "body is required" });
         }
-
         if (!validator.isValidObjectId(authorId)) {
             return res
                 .status(400)
                 .send({ status: false, msg: `${authorId} is not a valid authorId` });
         }
-
         if (!category) {
             return res
                 .status(400)
                 .send({ status: false, msg: "category title is required" });
         }
-
         const author = await authorModel.findById(authorId);
         if (!author) {
             return res
                 .status(400)
                 .send({ status: false, msg: "author does not exist" });
         }
-
         const savedData = await blogModel.create(data);
         res.status(201).send({ status: true, data: savedData });
     } catch (err) {
@@ -64,7 +56,6 @@ const getBlogs = async (req, res) => {
             isPublished: true,
             ...data,
         };
-
         const { category, subcategory, tags, authorId } = data;
         if (authorId) {
             console.log(authorId)
@@ -83,7 +74,6 @@ const getBlogs = async (req, res) => {
                     .send({ status: false, msg: "No blogs in this category exist" });
             }
         }
-
         if (tags) {
             let verifyTags = await blogModel.find({ tags: tags });
             if (verifyTags.length == 0) {
@@ -92,7 +82,6 @@ const getBlogs = async (req, res) => {
                     .send({ status: false, msg: "No blogs in this tags exist" });
             }
         }
-
         if (subcategory) {
             let verifySubcategory = await blogModel.find({ subcategory: subcategory });
             if (!verifySubcategory) {
@@ -101,9 +90,7 @@ const getBlogs = async (req, res) => {
                     .send({ status: false, msg: "No blogs in this Subcategory exist" });
             }
         }
-
         let getSpecificBlogs = await blogModel.find(filter);
-
         if (getSpecificBlogs.length == 0) {
             return res
                 .status(400)
@@ -135,36 +122,29 @@ const putBlog = async (req, res) => {
                 message: "Please Enter the Valid Key and Value to Update",
             });
         }
-
         if (!validator.isValidObjectId(id)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "this is not a valid blog Id" });
         }
-
         const deleteBlog = await blogModel.findById(id);
-
         if (!deleteBlog.isdeleted == true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "Blog already Deleted" });
         }
-
         let blogFound = await blogModel.findOne({ _id: id });
-
         if (!blogFound) {
             return res
                 .status(400)
                 .send({ status: false, msg: "No Blog with this Id exist" });
         }
-
         if (blogFound.authorId != authorId) {
             return res.status(401).send({
                 status: false,
                 msg: "You are trying to perform an Unauthorized action",
             });
         }
-
         let updatedBlog = await blogModel.findOneAndUpdate(
             { _id: id },
             {
@@ -192,35 +172,29 @@ const deleteBlog = async (req, res) => {
                 msg: "blogId must be present in order to delete it",
             });
         }
-
         let blogFound = await blogModel.findOne({ _id: blog });
-
         if (!blogFound) {
             return res.status(400).send({
                 status: false,
                 msg: "No blog exists with this Blog Id, please provide another one",
             });
         }
-
         if (blogFound.authorId != authorId) {
             return res.status(401).send({
                 status: false,
                 msg: "You are trying to perform an Unauthorized action",
             });
         }
-
         if (!blogFound.isdeleted === true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "this blog has been deleted by You" });
         }
-
         let deletedBlog = await blogModel.findOneAndUpdate(
             { _id: blog },
             { $set: { isdeleted: true }, deletedAt: Date.now() },
             { new: true, upsert: true }
         );
-
         return res.status(200).send({
             status: true,
             msg: "Your Blog has been successfully deleted",

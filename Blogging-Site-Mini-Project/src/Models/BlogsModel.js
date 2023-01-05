@@ -1,5 +1,9 @@
+//______________________ Import or Require Modules ________________________________
+
 const mongoose = require("mongoose")
 const objectId = mongoose.Schema.Types.ObjectId;
+
+//____________________________ Creating Schema _____________________________________
 
 const blogSchema = new mongoose.Schema({
     title: {
@@ -16,6 +20,7 @@ const blogSchema = new mongoose.Schema({
         required: true
     },
     tags: [String],
+
     category: {
         type: String,
         required: true

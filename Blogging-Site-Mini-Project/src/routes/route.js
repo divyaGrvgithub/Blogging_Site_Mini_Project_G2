@@ -48,7 +48,7 @@ router.delete("/blogs/:blogId", MW.tokenAuthentication, MW.tokenAuthorization, b
 router.delete("/blogs", MW.tokenAuthentication, MW.tokenAuthorization, blogController.deleteByQuery)
 
 
-router.all("/*", function (req, res) {
+router.all("/*", (req, res) =>{
     res.status(404).send({ msg: "invalid http request" })
 })
 
