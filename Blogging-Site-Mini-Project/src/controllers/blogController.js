@@ -109,7 +109,7 @@ const putBlog = async (req, res) => {
                 .send({ status: false, msg: "this is not a valid blog Id" });
         }
         const deleteBlog = await blogModel.findById(id);
-        if (!deleteBlog.isdeleted == true) {
+        if (deleteBlog.isdeleted == true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "Blog already Deleted" });
@@ -166,7 +166,7 @@ const deleteBlog = async (req, res) => {
                 msg: "You are trying to perform an Unauthorized action",
             });
         }
-        if (!blogFound.isdeleted === true) {
+        if (blogFound.isdeleted === true) {
             return res
                 .status(404)
                 .send({ status: false, msg: "this blog has been deleted by You" });

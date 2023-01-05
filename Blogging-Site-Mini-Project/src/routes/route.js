@@ -45,7 +45,7 @@ router.delete("/blogs/:blogId", MW.tokenAuthentication, MW.tokenAuthorization, b
 // //__________________________ Delete api : Delete by Query ___________________________________________
 //<----------------These APIs used for Deleting Blogs by query of Logged in Author--------->//
 
-router.delete("/blogs", MW.tokenAuthentication, MW.tokenAuthorization, blogController.deleteByQuery)
+router.delete("/blogs", MW.tokenAuthorization, blogController.deleteByQuery)
 
 
 router.all("/*", (req, res) =>{
