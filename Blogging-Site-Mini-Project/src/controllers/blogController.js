@@ -2,7 +2,15 @@
 
 const blogModel = require("../Models/BlogsModel");
 const authorModel = require("../Models/AuthorModel");
-const validator = require("../Validation/validator");
+const validators = require("../Validation/validator");
+const validator = require("validator")
+
+const idcheck = function (value) {
+  let a = validator.isMongoId(value)
+  if (!a) {
+    return true
+  } else return false
+}
 
 //______________________ post api : Create Blog ________________________________//
 //<--------------------This API used for Create Blogs-------------->//
@@ -28,7 +36,7 @@ const createBlog = async (req, res) => {
         if (!subcategory) {
             return res.status(400).send({ status: false, msg: "subcategory is required" });
         }
-        if (!validator.isValidObjectId(authorId)) {
+        if (!validators.isValidObjectId(authorId)) {
             return res
                 .status(400)
                 .send({ status: false, msg: `${authorId} is not a valid authorId` });

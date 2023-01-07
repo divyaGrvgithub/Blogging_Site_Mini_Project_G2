@@ -1,7 +1,7 @@
 //______________________ Import or Require Modules ________________________________//
 
 const authorModel = require("../Models/AuthorModel");
-const validator = require("../Validation/validator");
+const validators = require("../Validation/validator");
 const jwt = require("jsonwebtoken");
 
 //______________________ post api : Create Author ________________________________
@@ -20,13 +20,13 @@ const createAuthor = async (req, res) => {
 
         const { fname, lname, title, email, password } = data;
 
-        if (!validator.isValidName(fname)) {
+        if (!validators.isValidName(fname)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "first name is required" });
         }
 
-        if (!validator.isValidName(lname)) {
+        if (!validators.isValidName(lname)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "last name is required" });
@@ -41,7 +41,7 @@ const createAuthor = async (req, res) => {
                     .send({ status: false, msg: "title can be Mr. Miss or Mrs " });
             }
         }
-        if (!validator.isValidEmail(email)) {
+        if (!validators.isValidEmail(email)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "Please Enter Valid Email Address" });
@@ -53,7 +53,7 @@ const createAuthor = async (req, res) => {
                 msg: "Oooh...Email already Registered. Please Login...",
             });
         }
-        if (!validator.isValidPassword(password)) {
+        if (!validators.isValidPassword(password)) {
             return res.status(400).send({
                 status: false,
                 msg: "Password is required and Should Contain Min 8 character and 1 Special Symbol",
@@ -79,10 +79,10 @@ const logInUser = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
-        if (!validator.isValidEmail(email)) {
+        if (!validators.isValidEmail(email)) {
             return res.status(400).send({ status: false, msg: "Email is required" });
         }
-        if (!validator.isValidPassword(password)) {
+        if (!validators.isValidPassword(password)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "password is required" });
