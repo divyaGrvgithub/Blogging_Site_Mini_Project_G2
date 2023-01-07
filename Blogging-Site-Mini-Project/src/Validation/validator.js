@@ -16,7 +16,7 @@ const isValidName = function (name) {
 
 const isValidEmail = function (email) {
     const emailRegex =
-        /^@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"/;
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return emailRegex.test(email);
 };
 

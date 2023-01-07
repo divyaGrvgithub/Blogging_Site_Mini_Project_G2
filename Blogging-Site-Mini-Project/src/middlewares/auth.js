@@ -1,6 +1,14 @@
 const blogModel = require('../Models/BlogsModel');
 const jwt = require('jsonwebtoken');
-const ObjectId = require("mongoose").Types.ObjectId
+const ObjectId = require("mongoose")
+const validator = require("validator")
+
+const idcheck = function(value) {
+    let a = validator.isMongoId(value)
+    if (!a) {
+        return true
+    } else return false
+}
 
 //=============================================== Authentication <=============================================//
 
@@ -18,30 +26,37 @@ const tokenAuthentication = (req, res, next) => {
         }
         next();
       } catch (err) {
-        res.status(500).send({ msg: "Error", Error: err.message });
+        res.status(500).send({ status: false, msg: error.message  });
       }
 }
 
 // =============================================== Authorization =======================================================//
-const tokenAuthorization = (req, res, next) => {
+const tokenAuthorization = async (req, res, next) => {
     try {
-        let token = req.headers["x-api-key"];
-        if (!token) {
-            return res.status(400).send({ status: false, msg: "the header token is required." });
-        }
-        let decoded = jwt.verify(token, "functionUp-project-blogging-site");
-        if (!decoded) {
+      //let token = req.headers["x-api-key"]
+        const blogId = req.params.blogId
+        if(idcheck(req.params.blogId)) {
+          return res.
+          status(404).send({status:false,msg:"ID Incorrect"
+        });
+      }
+        const blog = await blogModel.findById(blogId).select({ authorId: 1, _id: 0 })
+         if (blog == null) {            
+             return res.
+             status(404).send({ status: false, msg: "Blog document doesn't exist.." 
+            });
+       }
+        const authorId = blog.authorId.toString()
+        //const decodedToken = jwt.verify(token, "functionUp-project-blogging-site")
+        if (authorId != req.token) {
             return res.
-            status(401).send({ status: false, msg: "Invalid token id." });
-        }
-        if (decoded.userId != req.params.userId) {
-            return res.
-            status(403).send({ status: false, msg: "The loggdin user is not authorized." });
-        }
-        next();
-    } catch (err) {
-        res.status(500).send({ msg: "Error", Error: err.message });
+            status(403).send({ status: false, msg: 'Access is Denied' ,
+          });
+        }       
+    } catch (error) {
+        return res.status(500).send({ status: false, msg: error.message })
     }
+    next()
 }
 
 module.exports.tokenAuthentication = tokenAuthentication;

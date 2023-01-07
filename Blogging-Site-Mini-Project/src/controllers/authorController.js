@@ -41,7 +41,7 @@ const createAuthor = async (req, res) => {
                     .send({ status: false, msg: "title can be Mr. Miss or Mrs " });
             }
         }
-        if (validator.isValidEmail(email)) {
+        if (!validator.isValidEmail(email)) {
             return res
                 .status(400)
                 .send({ status: false, msg: "Please Enter Valid Email Address" });
@@ -79,7 +79,7 @@ const logInUser = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
-        if (validator.isValidEmail(email)) {
+        if (!validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, msg: "Email is required" });
         }
         if (!validator.isValidPassword(password)) {
