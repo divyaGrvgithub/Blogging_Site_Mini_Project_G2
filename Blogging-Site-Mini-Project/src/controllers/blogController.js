@@ -218,7 +218,7 @@ const deleteBlog = async (req, res) => {
                 msg: "No blog exists with this Blog Id, please provide another one",
             });
         }
-        if (blogFound.isdeleted == true) {
+        if (blogFound.isdeleted !== true) {
             return res.status(404).send({
                 status: false,
                 msg: "no such id"
